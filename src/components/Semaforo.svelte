@@ -1,25 +1,31 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
 
-	export let lightState = 2;
-	export let timeInt = 8;
+	export let lightState = 0;
+	export let warningTime = 3 * 1000;
+	export let timeInt = 13 * 1000;
 	let interval = null;
+	const handleLightInterval = () => {
+		lightState += 1;
+		if (lightState > 3) lightState = 0;
+	};
 
-	onMount(() => {
-		interval = setInterval(() => {
-			lightState += 1;
-			if (lightState > 2) lightState = 0;
-		}, timeInt * 1000);
-	});
-	onDestroy(() => {
+	$: {
 		clearInterval(interval);
-	});
+		interval = setInterval(
+			handleLightInterval,
+			lightState == 1 || lightState == 2 ? warningTime : timeInt
+		);
+	}
 </script>
 
 <article>
-	<div light={lightState == 2 ? 'on' : 'off'} style="background-color: red;" />
-	<div light={lightState == 1 ? 'on' : 'off'} style="background-color: yellow;" />
-	<div light={lightState == 0 ? 'on' : 'off'} style="background-color: green;" />
+	<div light={lightState == 3 ? 'on' : 'off'} style="background-color: red;" />
+	<div light={lightState == 2 ? 'on' : 'off'} style="background-color: yellow;" />
+	<div
+		light={lightState == 0 ? 'on' : lightState == 1 ? 'warn' : 'off'}
+		style="background-color: green;"
+	/>
 </article>
 
 <style>
@@ -33,10 +39,10 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 40px 0;
-		scale: .2;
+		scale: 0.2;
 		position: absolute;
-		top: var(--top,0);
-		left: var(--left,0);
+		top: var(--top, 0);
+		left: var(--left, 0);
 	}
 	div {
 		width: 75px;
@@ -52,5 +58,18 @@
 	div[light='on'] {
 		filter: brightness(100%);
 		box-shadow: 0px 0px 20px white;
+	}
+	div[light='warn'] {
+		animation: warningLight 1s infinite;
+	}
+	@keyframes warningLight {
+		0% {
+			filter: brightness(50%);
+			box-shadow: 0px 0px 20px rgb(105, 105, 105);
+		}
+		100% {
+			filter: brightness(100%);
+			box-shadow: 0px 0px 20px white;
+		}
 	}
 </style>
