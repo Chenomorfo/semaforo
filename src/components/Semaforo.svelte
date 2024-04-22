@@ -14,7 +14,11 @@
 		clearInterval(interval);
 		interval = setInterval(
 			handleLightInterval,
-			lightState == 1 || lightState == 2 ? warningTime : timeInt
+			lightState == 1 || lightState == 2
+				? warningTime
+				: lightState == 3
+					? warningTime * 2 + timeInt
+					: timeInt
 		);
 	}
 </script>
@@ -43,6 +47,7 @@
 		position: absolute;
 		top: var(--top, 0);
 		left: var(--left, 0);
+		rotate: var(--rotate, 0);
 	}
 	div {
 		width: 75px;
