@@ -18,7 +18,7 @@ function createState() {
     return {
         subscribe,
         increment: () => update(n => ({
-            ...n, elapsed: n.elapsed < 38 ? n.elapsed + 1 : 0,
+            ...n, elapsed: n.elapsed < 40 ? n.elapsed + 1 : 0,
             stopElapsed: n.stopElapsed + 1
         })),
         changeLight: (green = false, red = false) => update(n => ({
@@ -40,13 +40,13 @@ export const elapsedDerived = derived(
     ($semaforo) => {
         if ($semaforo.isPreventive)
             return 0
-        if ($semaforo.elapsed <= 13) // verde
+        if ($semaforo.elapsed <= 15) // verde
             return 1
-        if ($semaforo.elapsed <= 16) //verde parpadeante
+        if ($semaforo.elapsed <= 17) //verde parpadeante
             return 2
-        if ($semaforo.elapsed <= 19) // amarillo
+        if ($semaforo.elapsed <= 21) // amarillo
             return 3
-        if ($semaforo.elapsed <= 38) //rojo
+        if ($semaforo.elapsed <= 40) //rojo
             return 4
     }
 )
@@ -56,13 +56,13 @@ export const reverseDerived = derived(
     ($semaforo) => {
         if ($semaforo.isPreventive)
             return 0
-        if ($semaforo.elapsed <= 19) //rojo
+        if ($semaforo.elapsed <= 21) //rojo
             return 4
-        if ($semaforo.elapsed <= 32) // verde
+        if ($semaforo.elapsed <= 34) // verde
             return 1
-        if ($semaforo.elapsed <= 35) //verde parpadeante
+        if ($semaforo.elapsed <= 36) //verde parpadeante
             return 2
-        if ($semaforo.elapsed <= 38) // amarillo
+        if ($semaforo.elapsed <= 40) // amarillo
             return 3
     }
 )

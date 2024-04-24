@@ -40,18 +40,33 @@
 		<button on:click={IniciarSemaforos} style="background-color: aquamarine;">Iniciar</button>
 		<button on:click={ReiniciarSemaforo} style="background-color: aqua;">Reiniciar</button>
 		<button on:click={IniciarPreventivas} style="background-color: bisque;">Preventivas</button>
-		<h1>Semaforos Norte/Sur: {showLightState($elapsedDerived)}</h1>
-		<h1>Semaforos Norte/Sur: {showTimeRemainHor($semaforo.elapsed)}</h1>
-		<h1>Semaforos Este/Oeste: {showLightState($reverseDerived)}</h1>
-		<h1>Semaforos Este/Oeste: {showTimeRemainVer($semaforo.elapsed)}</h1>
+		<h1>Semaforos Norte/Sur: {showLightState($elapsedDerived).value}</h1>
+		<h1>
+			Semaforos Norte/Sur: <span style={'color:' + showLightState($elapsedDerived).key}>
+				{showTimeRemainHor($semaforo.elapsed)}</span
+			>
+		</h1>
+		<h1>Semaforos Este/Oeste: {showLightState($reverseDerived).value}</h1>
+		<h1>
+			Semaforos Este/Oeste: <span style={'color:' + showLightState($reverseDerived).key}
+				>{showTimeRemainVer($semaforo.elapsed)}</span
+			>
+		</h1>
 	</div>
 </section>
 
 <style>
+	@font-face {
+		font-family: 'Clock';
+		/*a name to be used later*/
+		src: url('fonts/digital-7/digital-7.ttf');
+		/*URL to font*/
+	}
 	section {
 		display: flex;
 		flex-direction: row;
 		gap: 4px;
+		font-family: 'Clock';
 	}
 	div {
 		display: grid;
@@ -70,5 +85,9 @@
 	div button:hover {
 		margin: 0px;
 		padding: 4px;
+	}
+	h1 span {
+		font-size: 100px;
+		color: var(--color, green);
 	}
 </style>
