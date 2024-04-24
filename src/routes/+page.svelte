@@ -4,6 +4,7 @@
 	import Carro from '../components/Carro.svelte';
 	import Semaforo from '../components/Semaforo.svelte';
 	import Street from '../components/Street.svelte';
+	import { showLightState } from '$lib';
 
 	let interval = null;
 	const handleLightInterval = () => semaforo.increment();
@@ -39,6 +40,9 @@
 		<button on:click={IniciarSemaforos} style="background-color: aquamarine;">Iniciar</button>
 		<button on:click={ReiniciarSemaforo} style="background-color: aqua;">Reiniciar</button>
 		<button on:click={IniciarPreventivas} style="background-color: bisque;">Preventivas</button>
+		<h1>Semaforos Norte/Sur: {showLightState($elapsedDerived)}</h1>
+		<h1>Semaforos Norte/Sur: {showLightState($elapsedDerived)}</h1>
+		<h1>Semaforos Este/Oeste: {showLightState($reverseDerived)}</h1>
 	</div>
 </section>
 

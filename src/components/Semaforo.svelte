@@ -25,7 +25,7 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 40px 0;
-		scale: 0.2;
+		scale: 0.15;
 		position: absolute;
 		top: var(--top, 0);
 		left: var(--left, 0);
