@@ -1,33 +1,15 @@
 <script>
-	import { onDestroy, onMount } from 'svelte';
-
 	export let lightState = 0;
-	export let warningTime = 3 * 1000;
-	export let timeInt = 13 * 1000;
-	let interval = null;
-	const handleLightInterval = () => {
-		lightState += 1;
-		if (lightState > 3) lightState = 0;
-	};
-
-	$: {
-		clearInterval(interval);
-		interval = setInterval(
-			handleLightInterval,
-			lightState == 1 || lightState == 2
-				? warningTime
-				: lightState == 3
-					? warningTime * 2 + timeInt
-					: timeInt
-		);
-	}
 </script>
 
 <article>
-	<div light={lightState == 3 ? 'on' : 'off'} style="background-color: red;" />
-	<div light={lightState == 2 ? 'on' : 'off'} style="background-color: yellow;" />
+	<div light={lightState == 4 ? 'on' : 'off'} style="background-color: red;" />
 	<div
-		light={lightState == 0 ? 'on' : lightState == 1 ? 'warn' : 'off'}
+		light={lightState == 3 ? 'on' : lightState == 0 ? 'warn' : 'off'}
+		style="background-color: yellow;"
+	/>
+	<div
+		light={lightState == 1 ? 'on' : lightState == 2 ? 'warn' : 'off'}
 		style="background-color: green;"
 	/>
 </article>
