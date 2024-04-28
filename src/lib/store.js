@@ -3,7 +3,7 @@ import { derived, writable } from "svelte/store";
 const model = {
     isPaused: false,
     isPreventive: false,
-    elapsed: 0,
+    elapsed: 32,
     stopElapsed: 0,
     greenTime: 13,
     warnTime: 3,
@@ -18,7 +18,7 @@ function createState() {
     return {
         subscribe,
         increment: () => update(n => ({
-            ...n, elapsed: n.elapsed < 40 ? n.elapsed + 1 : 0,
+            ...n, elapsed: n.elapsed <= 50 ? n.elapsed + 1 : 0,
             stopElapsed: n.stopElapsed + 1
         })),
         changeLight: (green = false, red = false) => update(n => ({
@@ -42,11 +42,11 @@ export const elapsedDerived = derived(
             return 0
         if ($semaforo.elapsed <= 15) // verde
             return 1
-        if ($semaforo.elapsed <= 17) //verde parpadeante
+        if ($semaforo.elapsed <= 18) //verde parpadeante
             return 2
         if ($semaforo.elapsed <= 21) // amarillo
             return 3
-        if ($semaforo.elapsed <= 40) //rojo
+        if ($semaforo.elapsed <= 23 + 16 + 8) //rojo
             return 4
     }
 )
@@ -56,13 +56,15 @@ export const reverseDerived = derived(
     ($semaforo) => {
         if ($semaforo.isPreventive)
             return 0
-        if ($semaforo.elapsed <= 21) //rojo
+        if ($semaforo.elapsed <= 23) //rojo
             return 4
-        if ($semaforo.elapsed <= 34) // verde
+        if ($semaforo.elapsed <= 23 + 16) // verde
             return 1
-        if ($semaforo.elapsed <= 36) //verde parpadeante
+        if ($semaforo.elapsed <= 23 + 16 + 3) //verde parpadeante
             return 2
-        if ($semaforo.elapsed <= 40) // amarillo
+        if ($semaforo.elapsed <= 23 + 16 + 6) // amarillo
             return 3
+        if ($semaforo.elapsed <= 23 + 16 + 8) // rojo todos
+            return 4
     }
 )

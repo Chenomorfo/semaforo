@@ -21,21 +21,38 @@ export const showLightState = (state = 0) => {
 export const showTimeRemainHor = (elapsed = 0) => {
     if (elapsed <= 15) // verde
         return 15 - elapsed
-    if (elapsed <= 17) //verde parpadeante
+    if (elapsed <= 18) //verde parpadeante
         return elapsed - 15;
     if (elapsed <= 21) // amarillo
         return elapsed - 18
-    if (elapsed <= 40) //rojo
-        return elapsed - 21
+    if (elapsed <= 46) //rojo todos
+        return elapsed - 20
+    if (elapsed <= 48)
+        return elapsed - 46
+    return 0
 }
 
+/* 16s verd (15 a 0)
+    19s verd[]
+    22s amar
+    24s rojo
+    40s verd (15 a 0)
+    43s verd[]
+    46s ama
+    48s rojo
+*/
+
 export const showTimeRemainVer = (elapsed = 0) => {
-    if (elapsed <= 21) //rojo
-        return elapsed
-    if (elapsed <= 34) // verde
-        return 16 - (elapsed - 21)
-    if (elapsed <= 37) //verde parpadeante
-        return elapsed - 34
-    if (elapsed <= 40) // amarillo
-        return elapsed - 37
+    if (elapsed <= 23) //rojo
+        return elapsed - 21
+    if (elapsed <= 39) // verde
+        return 15 - (elapsed - 24)
+    if (elapsed <= 39 + 3) //verde parpadeante
+        return elapsed - 39
+    if (elapsed <= 39 + 6) // amarillo
+        return elapsed - 42
+    if (elapsed <= 39 + 8) // rojo Todos
+        return elapsed - 45
+
+    return 0
 }

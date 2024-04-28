@@ -40,23 +40,27 @@
 		transition: all 0.5s ease;
 	}
 	div[light='off'] {
-		filter: brightness(50%);
+		filter: brightness(20%);
 	}
 	div[light='on'] {
 		filter: brightness(100%);
 		box-shadow: 0px 0px 20px white;
 	}
 	div[light='warn'] {
-		animation: warningLight 1s infinite;
+		animation: warningLight 1s infinite ease-in-out;
 	}
 	@keyframes warningLight {
 		0% {
-			filter: brightness(50%);
+			filter: brightness(20%);
 			box-shadow: 0px 0px 20px rgb(105, 105, 105);
 		}
-		100% {
+		50% {
 			filter: brightness(100%);
 			box-shadow: 0px 0px 20px white;
+		}
+		100% {
+			filter: brightness(20%);
+			box-shadow: 0px 0px 20px rgb(105, 105, 105);
 		}
 	}
 </style>
