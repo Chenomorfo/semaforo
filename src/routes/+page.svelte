@@ -37,12 +37,12 @@
 		<!-- Oeste -- Nuevo Norte -->
 
 		{#if $semaforo.elapsed <= 21}
-			<article>{showTimeRemainHor($semaforo.elapsed)}</article>
+			<article style={'color:' + showLightState($elapsedDerived).key}>{showTimeRemainHor($semaforo.elapsed)}</article>
 		{:else}
-			<article>{showTimeRemainVer($semaforo.elapsed)}</article>
+			<article style={'color:' + showLightState($reverseDerived).key}>{showTimeRemainVer($semaforo.elapsed)}</article>
 		{/if}
 		<!-- CARROS -->
-		<!-- <Carro --top="280px" --left="-50px" />
+		<!-- <Carro --top="280px" --left="-50px" />	
 		<Carro --top="280px" --left="-15px" /> -->
 	</Street>
 	<div>
@@ -115,5 +115,8 @@
 		align-items: center;
 		justify-content: center;
 		font-size: 32px;
+		color : green;
+	
+		
 	}
 </style>

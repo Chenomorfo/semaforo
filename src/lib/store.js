@@ -3,7 +3,7 @@ import { derived, writable } from "svelte/store";
 const model = {
     isPaused: false,
     isPreventive: false,
-    elapsed: 32,
+    elapsed: 24,
     stopElapsed: 0,
     greenTime: 13,
     warnTime: 3,
