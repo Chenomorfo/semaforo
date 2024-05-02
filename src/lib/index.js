@@ -9,13 +9,13 @@ const colors = [
 ]
 
 export const showLightState = (state = 0) => {
-    if (state == 0) return colors[4]
-    if (state == 1) return colors[0]
-    if (state == 2) return colors[1]
-    if (state == 3) return colors[2]
-    if (state == 4) return colors[3]
+    //if (state == 0) return colors[4]
+    if (state <= 2 && state > 0) return colors[0]
+    if (state == 4) return colors[2]
+    if (state == 6) return colors[3]
+    //if (state == 4) return colors[3]
 
-    return colors[0]
+    return { key: "black" }
 }
 
 export const showTimeRemainHor = (elapsed = 0) => {

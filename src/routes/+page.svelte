@@ -26,14 +26,33 @@
 
 <section>
 	<Street>
-		<Semaforo lightState={$semaforo.estado} --rotate="900deg" --top="100px" --left="280px" />
+		<Semaforo
+			lightState={$semaforo.isPreventive ? 4 : $semaforo.estado}
+			--rotate="900deg"
+			--top="100px"
+			--left="150px"
+		/>
 		<!-- Norte -- Nuevo este -->
-		<Semaforo lightState={$semaforo.estado} --top="175px" --left="175px" />
+		<Semaforo
+			lightState={$semaforo.isPreventive ? 4 : $semaforo.estado}
+			--top="175px"
+			--left="305px"
+		/>
 		<!-- Sur -- Nuevo Oeste -->
 
-		<Semaforo lightState={$semaforo.estado2} --top="215px" --left="265px" --rotate="-90deg" />
+		<Semaforo
+			lightState={$semaforo.isPreventive ? 4 : $semaforo.estado2}
+			--top="60px"
+			--left="265px"
+			--rotate="-90deg"
+		/>
 		<!-- Este -- Nuevo Sur -->
-		<Semaforo lightState={$semaforo.estado2} --top="60px" --left="190px" --rotate="90deg" />
+		<Semaforo
+			lightState={$semaforo.isPreventive ? 4 : $semaforo.estado2}
+			--top="215px"
+			--left="190px"
+			--rotate="90deg"
+		/>
 		<!-- Oeste -- Nuevo Norte -->
 
 		{#if $semaforo.estado != 6}
@@ -44,7 +63,7 @@
 					: Math.round($semaforo.elapsed / 2)}
 			</article>
 		{:else}
-			<article style={'color:' + showLightState($semaforo.estado).key}>
+			<article style={'color:' + showLightState($semaforo.estado2).key}>
 				{$semaforo.estado2 == 1
 					? 15 - Math.round($semaforo.stopElapsed / 2)
 					: Math.round($semaforo.stopElapsed / 2)}
@@ -71,12 +90,9 @@
 				>{showTimeRemainVer($semaforo.elapsed)}</span
 			>
 		</h1>		-->
-		<h1>{$semaforo.elapsed}</h1>
-		<h1>{$semaforo.estado}</h1>
-		<h1>{$semaforo.stopElapsed}</h1>
-		<h1>{$semaforo.estado2}</h1>
-		<h1>{$elapsedDerived}</h1>
-		<h1>{$reverseDerived}</h1>
+
+		<h1 hidden>{$elapsedDerived}</h1>
+		<h1 hidden>{$reverseDerived}</h1>
 	</div>
 </section>
 

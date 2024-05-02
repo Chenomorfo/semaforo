@@ -59,8 +59,9 @@ export const elapsedDerived = derived(
             if ($semaforo.estado == 7) $semaforo.estado = 1
             else $semaforo.estado += 1
         }
-        if ($semaforo.isPreventive)
-            return 0
+        if ($semaforo.isPreventive) {
+            return
+        }
         switch (($semaforo.estado)) {
             case (0):
                 if ($semaforo.elapsed == pray["Inicio"].time)
@@ -118,8 +119,10 @@ export const reverseDerived = derived(
             else if ($semaforo.estado2 == 7) $semaforo.estado2 = 1
             else $semaforo.estado2 += 1
         }
+
         if ($semaforo.isPreventive)
-            return 0
+            return
+
         switch (($semaforo.estado2)) {
             case (0):
                 if ($semaforo.stopElapsed == pray2["Inicio"].time)
