@@ -12,34 +12,44 @@
 	const IniciarSemaforos = () => {
 		semaforo.pause();
 		if ($semaforo.isPaused) clearInterval(interval);
-		else interval = setInterval(handleLightInterval, 1 * 1000);
+		else interval = setInterval(handleLightInterval, 1 * 500);
 	};
 	const IniciarPreventivas = () => {
 		semaforo.preventive();
 		if ($semaforo.isPreventive) clearInterval(interval);
-		else interval = setInterval(handleLightInterval, 1000);
+		else interval = setInterval(handleLightInterval, 500);
 	};
 	const ReiniciarSemaforo = () => semaforo.reset();
 
-	interval = setInterval(handleLightInterval, 1 * 1000);
+	interval = setInterval(handleLightInterval, 1 * 500);
 </script>
 
 <section>
 	<Street>
-		<Semaforo lightState={$elapsedDerived} --rotate="900deg" --top="100px" --left="280px" />
+		<Semaforo lightState={$semaforo.estado} --rotate="900deg" --top="100px" --left="280px" />
 		<!-- Norte -- Nuevo este -->
-		<Semaforo lightState={$elapsedDerived} --top="175px" --left="175px" />
+		<Semaforo lightState={$semaforo.estado} --top="175px" --left="175px" />
 		<!-- Sur -- Nuevo Oeste -->
 
-		<Semaforo lightState={$reverseDerived} --top="215px" --left="265px" --rotate="-90deg" />
+		<Semaforo lightState={$semaforo.estado2} --top="215px" --left="265px" --rotate="-90deg" />
 		<!-- Este -- Nuevo Sur -->
-		<Semaforo lightState={$reverseDerived} --top="60px" --left="190px" --rotate="90deg" />
+		<Semaforo lightState={$semaforo.estado2} --top="60px" --left="190px" --rotate="90deg" />
 		<!-- Oeste -- Nuevo Norte -->
 
-		{#if $semaforo.elapsed <= 21}
-			<article style={'color:' + showLightState($elapsedDerived).key}>{showTimeRemainHor($semaforo.elapsed)}</article>
+		{#if $semaforo.estado != 6}
+			<article style={'color:' + showLightState($semaforo.estado).key}>
+				<!-- {showTimeRemainHor($semaforo.elapsed)} -->
+				{$semaforo.estado == 1
+					? 15 - Math.round($semaforo.elapsed / 2)
+					: Math.round($semaforo.elapsed / 2)}
+			</article>
 		{:else}
-			<article style={'color:' + showLightState($reverseDerived).key}>{showTimeRemainVer($semaforo.elapsed)}</article>
+			<article style={'color:' + showLightState($semaforo.estado).key}>
+				{$semaforo.estado2 == 1
+					? 15 - Math.round($semaforo.stopElapsed / 2)
+					: Math.round($semaforo.stopElapsed / 2)}
+				<!-- {showTimeRemainVer($semaforo.elapsed)} -->
+			</article>
 		{/if}
 		<!-- CARROS -->
 		<!-- <Carro --top="280px" --left="-50px" />	
@@ -49,7 +59,7 @@
 		<button on:click={IniciarSemaforos} style="background-color: aquamarine;">Iniciar</button>
 		<button on:click={ReiniciarSemaforo} style="background-color: aqua;">Reiniciar</button>
 		<button on:click={IniciarPreventivas} style="background-color: bisque;">Preventivas</button>
-<!-- 		<h1>Semaforos Norte/Sur: {showLightState($elapsedDerived).value}</h1>
+		<!-- 		<h1>Semaforos Norte/Sur: {showLightState($elapsedDerived).value}</h1>
 		<h1>
 			Semaforos Norte/Sur: <span style={'color:' + showLightState($elapsedDerived).key}>
 				{showTimeRemainHor($semaforo.elapsed)}</span
@@ -61,7 +71,12 @@
 				>{showTimeRemainVer($semaforo.elapsed)}</span
 			>
 		</h1>		-->
-		<h1>{$semaforo.elapsed}</h1> 
+		<h1>{$semaforo.elapsed}</h1>
+		<h1>{$semaforo.estado}</h1>
+		<h1>{$semaforo.stopElapsed}</h1>
+		<h1>{$semaforo.estado2}</h1>
+		<h1>{$elapsedDerived}</h1>
+		<h1>{$reverseDerived}</h1>
 	</div>
 </section>
 
@@ -115,8 +130,6 @@
 		align-items: center;
 		justify-content: center;
 		font-size: 32px;
-		color : green;
-	
-		
+		color: green;
 	}
 </style>

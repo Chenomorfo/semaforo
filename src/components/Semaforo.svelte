@@ -3,9 +3,9 @@
 </script>
 
 <article>
-	<div light={lightState == 4 ? 'on' : 'off'} style="background-color: red;" />
+	<div light={lightState == 6 ? 'on' : 'off'} style="background-color: red;" />
 	<div
-		light={lightState == 3 ? 'on' : lightState == 0 ? 'warn' : 'off'}
+		light={lightState == 4 ? 'on' : lightState == 777 ? 'warn' : 'off'}
 		style="background-color: yellow;"
 	/>
 	<div
@@ -37,7 +37,7 @@
 		border: 3px solid white;
 		border-radius: 50%;
 		position: relative;
-		transition: all 0.5s ease;
+		transition: all 0s ease;
 	}
 	div[light='off'] {
 		filter: brightness(20%);
