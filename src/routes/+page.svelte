@@ -1,99 +1,145 @@
 <script>
-	import { semaforo, elapsedDerived, reverseDerived } from '$lib/store';
-	import { onMount } from 'svelte';
-	import Carro from '../components/Carro.svelte';
+	import { semaforo, trafficLightDuration } from '$lib/store';
 	import Semaforo from '../components/Semaforo.svelte';
 	import Street from '../components/Street.svelte';
-	import { showLightState, showTimeRemainHor, showTimeRemainVer } from '$lib';
+	import { showLightState } from '$lib';
 
-	let interval = null;
-	const handleLightInterval = () => semaforo.increment();
-
+	/* 	let interval = null;
+	interval = setInterval(handleLightInterval, 1 * 500);
+	 */
+	/* 	const handleLightInterval = () => semaforo.increment();
+	 */
 	const IniciarSemaforos = () => {
 		semaforo.pause();
-		if ($semaforo.isPaused) clearInterval(interval);
-		else interval = setInterval(handleLightInterval, 1 * 500);
+		clearInterval(timeInt);
+		time = 0;
+		/* 	if ($semaforo.isPaused) clearInterval(interval);
+		else interval = setInterval(handleLightInterval, 1 * 500); */
 	};
 	const IniciarPreventivas = () => {
 		semaforo.preventive();
-		if ($semaforo.isPreventive) clearInterval(interval);
-		else interval = setInterval(handleLightInterval, 500);
+		clearInterval(timeInt);
+		time = 0;
 	};
-	const ReiniciarSemaforo = () => semaforo.reset();
 
-	interval = setInterval(handleLightInterval, 1 * 500);
+	const resetTimeInt = () => {
+		time = 0;
+		clearInterval(timeInt);
+		timeInt = setInterval(() => (time += 1), 1000);
+	};
+	let clear;
+	let timeInt;
+	let time = 0;
+	$: {
+		clearInterval(clear);
+		if ($semaforo.isPaused) null;
+		else if ($semaforo.isPreventive) null;
+		else if ($semaforo.isWaiting)
+			clear = setInterval(semaforo.tickme, trafficLightDuration['wait']);
+		else
+			switch ($semaforo.timeAction) {
+				case 1:
+					clear = setInterval(semaforo.tickme, trafficLightDuration['greenTz']);
+					resetTimeInt();
+					break;
+				case 2:
+					clear = setInterval(semaforo.tickme, trafficLightDuration['yellow']);
+					resetTimeInt();
+					break;
+				case 3:
+					clear = setInterval(semaforo.tickme, trafficLightDuration['red']);
+					resetTimeInt();
+					break;
+
+				default:
+					clear = setInterval(semaforo.tickme, trafficLightDuration['green']);
+					resetTimeInt();
+					break;
+			}
+	}
+	const ReiniciarSemaforo = () => semaforo.reset();
 </script>
 
 <section>
 	<Street>
 		<Semaforo
-			lightState={$semaforo.isPreventive ? 4 : $semaforo.estado}
+			lightState={$semaforo.isPreventive
+				? 4
+				: $semaforo.isVertical
+					? 3
+					: $semaforo.isWaiting
+						? 10
+						: $semaforo.timeAction}
 			--rotate="900deg"
 			--top="100px"
 			--left="150px"
 		/>
 		<!-- Norte -- Nuevo este -->
 		<Semaforo
-			lightState={$semaforo.isPreventive ? 4 : $semaforo.estado}
+			lightState={$semaforo.isPreventive
+				? 4
+				: $semaforo.isVertical
+					? 3
+					: $semaforo.isWaiting
+						? 10
+						: $semaforo.timeAction}
 			--top="175px"
 			--left="305px"
 		/>
 		<!-- Sur -- Nuevo Oeste -->
 
 		<Semaforo
-			lightState={$semaforo.isPreventive ? 4 : $semaforo.estado2}
+			lightState={$semaforo.isPreventive
+				? 4
+				: !$semaforo.isVertical
+					? 3
+					: $semaforo.isWaiting
+						? 10
+						: $semaforo.timeAction}
 			--top="60px"
 			--left="265px"
 			--rotate="-90deg"
 		/>
 		<!-- Este -- Nuevo Sur -->
 		<Semaforo
-			lightState={$semaforo.isPreventive ? 4 : $semaforo.estado2}
+			lightState={$semaforo.isPreventive
+				? 4
+				: !$semaforo.isVertical
+					? 3
+					: $semaforo.isWaiting
+						? 10
+						: $semaforo.timeAction}
 			--top="215px"
 			--left="190px"
 			--rotate="90deg"
 		/>
 		<!-- Oeste -- Nuevo Norte -->
 
-		{#if $semaforo.estado != 6}
-			<article style={'color:' + showLightState($semaforo.estado).key}>
-				<!-- {showTimeRemainHor($semaforo.elapsed)} -->
-				{$semaforo.estado == 1
-					? 15 - Math.round($semaforo.elapsed / 2)
-					: Math.round($semaforo.elapsed / 2)}
+		{#if $semaforo.isWaiting}
+			<article />
+		{:else if [0, 1].includes($semaforo.timeAction)}
+			<article style={'color:green'}>
+				{15 - time}
+			</article>
+		{:else if $semaforo.timeAction == 2}
+			<article style={'color:yellow'}>
+				{time + 1}
 			</article>
 		{:else}
-			<article style={'color:' + showLightState($semaforo.estado2).key}>
-				{$semaforo.estado2 == 1
-					? 15 - Math.round($semaforo.stopElapsed / 2)
-					: Math.round($semaforo.stopElapsed / 2)}
-				<!-- {showTimeRemainVer($semaforo.elapsed)} -->
+			<article style={'color:red'}>
+				{time + 1}
 			</article>
 		{/if}
-		<!-- CARROS -->
-		<!-- <Carro --top="280px" --left="-50px" />	
-		<Carro --top="280px" --left="-15px" /> -->
 	</Street>
 	<div>
 		<button on:click={IniciarSemaforos} style="background-color: aquamarine;">Iniciar</button>
 		<button on:click={ReiniciarSemaforo} style="background-color: aqua;">Reiniciar</button>
 		<button on:click={IniciarPreventivas} style="background-color: bisque;">Preventivas</button>
-		<!-- 		<h1>Semaforos Norte/Sur: {showLightState($elapsedDerived).value}</h1>
-		<h1>
-			Semaforos Norte/Sur: <span style={'color:' + showLightState($elapsedDerived).key}>
-				{showTimeRemainHor($semaforo.elapsed)}</span
-			>
-		</h1>
-		<h1>Semaforos Este/Oeste: {showLightState($reverseDerived).value}</h1>
-		<h1>
-			Semaforos Este/Oeste: <span style={'color:' + showLightState($reverseDerived).key}
-				>{showTimeRemainVer($semaforo.elapsed)}</span
-			>
-		</h1>		-->
-		<h1 hidden>{$elapsedDerived}</h1>
-		<h1 hidden>{$reverseDerived}</h1>
 
-		
+		<!-- 		<h1>{$semaforo.timeAction}</h1>
+		<h1>{$semaforo.isVertical}</h1>
+		<h1>{$semaforo.isWaiting}</h1>
+		<h1>{time}</h1> -->
 	</div>
 </section>
 
@@ -130,14 +176,12 @@
 		margin: 0px;
 		padding: 4px;
 	}
-	h1 span {
-		font-size: 100px;
-		color: var(--color, green);
-	}
+
 	article {
 		position: absolute;
 		background-color: white;
 		border: 3px solid black;
+		text-shadow: 2px 2px black;
 		border-radius: 50%;
 		height: 50px;
 		width: 50px;

@@ -3,13 +3,13 @@
 </script>
 
 <article>
-	<div light={lightState == 6 ? 'on' : 'off'} style="background-color: red;" />
+	<div light={lightState == 3 ? 'on' : 'off'} style="background-color: red;" />
 	<div
-		light={lightState == 4 ? 'on' : lightState == 777 ? 'warn' : 'off'}
+		light={lightState == 2 ? 'on' : lightState == 4 ? 'warn' : 'off'}
 		style="background-color: yellow;"
 	/>
 	<div
-		light={lightState == 1 ? 'on' : lightState == 2 ? 'warn' : 'off'}
+		light={lightState == 0 ? 'on' : lightState == 1 ? 'warn' : 'off'}
 		style="background-color: green;"
 	/>
 </article>

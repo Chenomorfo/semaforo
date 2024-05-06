@@ -5,8 +5,19 @@ const model = {
     isPreventive: false,
     elapsed: 0,
     estado: 5,
-    estado2: 1,
     stopElapsed: 0,
+    estado2: 1,
+    isVertical: true,
+    isWaiting: false,
+    timeAction: 0,
+    timeChange: new Date()
+}
+export const trafficLightDuration = {
+    green: 15 * 1000,
+    greenTz: 3 * 1000,
+    yellow: 3 * 1000,
+    red: 2 * 1000,
+    wait: 500
 }
 
 const pray = {
@@ -15,18 +26,9 @@ const pray = {
     "VerdePar": { state: 2, time: 6 },
     "apagao": { state: 3, time: 1 },
     "Amarellho": { state: 4, time: 6 },
-    "Rojo": { state: 5, time: 44 },
+    "Rojo": { state: 5, time: 42 },
     "apagao2": { state: 6, time: 1 },
 }
-// const pray2 = {
-//     "Inicio": { state: 0, time: 4 },
-//     "Rojo": { state: 1, time: 42 },
-//     "apagao": { state: 2, time: 1 },
-//     "Verde": { state: 3, time: 30 },
-//     "VerdePar": { state: 4, time: 6 },
-//     "Amarellho": { state: 5, time: 6 },
-//     "apagao2": { state: 6, time: 1 },
-// }
 
 function createState() {
     const { set, subscribe, update } = writable(model)
@@ -34,9 +36,22 @@ function createState() {
     return {
         subscribe,
         increment: () => update(n => ({
-            ...n, elapsed: n.elapsed + 1 /* <= 50 ? n.elapsed + 1 : 0 */,
+            ...n, elapsed: n.elapsed + 1,
             stopElapsed: n.stopElapsed + 1
         })),
+
+        tickme: () => update(n => {
+            if (n.isWaiting)
+                return { ...n, isWaiting: false }
+            //en caso de rojo
+            if (n.timeAction == 3)
+                return { ...n, isVertical: !n.isVertical, timeAction: 0, timeChange: new Date() }
+            //en caso de verde
+            if (![0, 1].includes(n.timeAction))
+                return { ...n, timeAction: n.timeAction + 1, timeChange: new Date() }
+            //en caso de cambio
+            return { ...n, timeAction: n.timeAction + 1, isWaiting: true, timeChange: new Date() }
+        }),
         changeLight: (green = false, red = false) => update(n => ({
             ...n,
             elapsed: green ? 0 : n.elapsed,
@@ -50,6 +65,18 @@ function createState() {
 }
 
 export const semaforo = createState()
+
+export const hope = derived(
+    semaforo,
+    ($semaforo) => {
+        if ($semaforo.isWaiting) return "wait"
+        if ($semaforo.timeAction == 0) return "green"
+        if ($semaforo.timeAction == 1) return "greenTz"
+        if ($semaforo.timeAction == 2) return "yellow"
+        if ($semaforo.timeAction == 3) return "red"
+        return "green"
+    }
+)
 
 export const elapsedDerived = derived(
     semaforo,
@@ -88,11 +115,10 @@ export const elapsedDerived = derived(
                     upgradeState()
                 break;
             case (6):
-                if ($semaforo.elapsed == pray["Rojo"].time){upgradeState()
-                $semaforo.elapsed =0
-                $semaforo.stopElapsed = 0
+                if ($semaforo.elapsed == pray["Rojo"].time) {
+                    upgradeState()
                 }
-                    
+
                 break;
             case (7):
                 if ($semaforo.elapsed == pray["apagao"].time)
@@ -101,14 +127,7 @@ export const elapsedDerived = derived(
             default:
                 break;
         }
-        /* if ($semaforo.elapsed <= 15) // verde
-            return 1
-        if ($semaforo.elapsed <= 18) //verde parpadeante
-            return 2
-        if ($semaforo.elapsed <= 21) // amarillo
-            return 3
-        if ($semaforo.elapsed <= 23 + 16 + 8) //rojo
-            return 4 */
+
     }
 )
 
@@ -151,11 +170,10 @@ export const reverseDerived = derived(
                 if ($semaforo.stopElapsed == pray["apagao"].time)
                     upgradeState()
                 break;
-                case (6):
-                    if ($semaforo.stopElapsed == pray["Rojo"].time){upgradeState()
-                    $semaforo.elapsed =0
-                    $semaforo.stopElapsed = 0
-                    }
+            case (6):
+                if ($semaforo.stopElapsed == pray["Rojo"].time) {
+                    upgradeState()
+                }
                 break;
             case (7):
                 if ($semaforo.stopElapsed == pray["apagao"].time)
@@ -164,15 +182,11 @@ export const reverseDerived = derived(
             default:
                 break;
         }
-        /*         if ($semaforo.elapsed <= 23) //rojo
-                    return 4
-                if ($semaforo.elapsed <= 23 + 16) // verde
-                    return 1
-                if ($semaforo.elapsed <= 23 + 16 + 3) //verde parpadeante
-                    return 2
-                if ($semaforo.elapsed <= 23 + 16 + 6) // amarillo
-                    return 3
-                if ($semaforo.elapsed <= 23 + 16 + 8) // rojo todos
-                    return 4 */
+
     }
 )
+
+export const elapsedTime = derived(
+    semaforo,
+    ($semaforo) => Math.round(($semaforo.timeChange - new Date()) / 1000)
+);
