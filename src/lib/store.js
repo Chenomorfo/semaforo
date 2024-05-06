@@ -4,8 +4,8 @@ const model = {
     isPaused: false,
     isPreventive: false,
     elapsed: 0,
-    estado: 0,
-    estado2: 0,
+    estado: 5,
+    estado2: 1,
     stopElapsed: 0,
 }
 
@@ -15,18 +15,18 @@ const pray = {
     "VerdePar": { state: 2, time: 6 },
     "apagao": { state: 3, time: 1 },
     "Amarellho": { state: 4, time: 6 },
-    "Rojo": { state: 5, time: 42 },
+    "Rojo": { state: 5, time: 44 },
     "apagao2": { state: 6, time: 1 },
 }
-const pray2 = {
-    "Inicio": { state: 0, time: 4 },
-    "Rojo": { state: 1, time: 42 },
-    "apagao": { state: 2, time: 1 },
-    "Verde": { state: 3, time: 30 },
-    "VerdePar": { state: 4, time: 6 },
-    "Amarellho": { state: 5, time: 6 },
-    "apagao2": { state: 6, time: 1 },
-}
+// const pray2 = {
+//     "Inicio": { state: 0, time: 4 },
+//     "Rojo": { state: 1, time: 42 },
+//     "apagao": { state: 2, time: 1 },
+//     "Verde": { state: 3, time: 30 },
+//     "VerdePar": { state: 4, time: 6 },
+//     "Amarellho": { state: 5, time: 6 },
+//     "apagao2": { state: 6, time: 1 },
+// }
 
 function createState() {
     const { set, subscribe, update } = writable(model)
@@ -88,8 +88,11 @@ export const elapsedDerived = derived(
                     upgradeState()
                 break;
             case (6):
-                if ($semaforo.elapsed == pray["Rojo"].time)
-                    upgradeState()
+                if ($semaforo.elapsed == pray["Rojo"].time){upgradeState()
+                $semaforo.elapsed =0
+                $semaforo.stopElapsed = 0
+                }
+                    
                 break;
             case (7):
                 if ($semaforo.elapsed == pray["apagao"].time)
@@ -125,7 +128,7 @@ export const reverseDerived = derived(
 
         switch (($semaforo.estado2)) {
             case (0):
-                if ($semaforo.stopElapsed == pray2["Inicio"].time)
+                if ($semaforo.stopElapsed == pray["Inicio"].time)
                     upgradeState()
                 break;
             case (1):
@@ -148,9 +151,11 @@ export const reverseDerived = derived(
                 if ($semaforo.stopElapsed == pray["apagao"].time)
                     upgradeState()
                 break;
-            case (6):
-                if ($semaforo.stopElapsed == pray["Rojo"].time)
-                    upgradeState()
+                case (6):
+                    if ($semaforo.stopElapsed == pray["Rojo"].time){upgradeState()
+                    $semaforo.elapsed =0
+                    $semaforo.stopElapsed = 0
+                    }
                 break;
             case (7):
                 if ($semaforo.stopElapsed == pray["apagao"].time)

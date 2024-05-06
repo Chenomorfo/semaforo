@@ -90,9 +90,10 @@
 				>{showTimeRemainVer($semaforo.elapsed)}</span
 			>
 		</h1>		-->
-
 		<h1 hidden>{$elapsedDerived}</h1>
 		<h1 hidden>{$reverseDerived}</h1>
+
+		
 	</div>
 </section>
 
