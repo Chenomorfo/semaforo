@@ -47,7 +47,7 @@
 		box-shadow: 0px 0px 20px white;
 	}
 	div[light='warn'] {
-		animation: warningLight 1s infinite ease-in-out;
+		animation: warningLight 1.2s infinite ease-in-out;
 	}
 	@keyframes warningLight {
 		0% {

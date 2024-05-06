@@ -15,7 +15,7 @@ export const showLightState = (state = 0) => {
     if (state == 6) return colors[3]
     //if (state == 4) return colors[3]
 
-    return { key: "black" }
+    return { key: "white" }
 }
 
 export const showTimeRemainHor = (elapsed = 0) => {
