@@ -117,17 +117,21 @@
 
 		{#if $semaforo.isWaiting}
 			<article />
-		{:else if [0, 1].includes($semaforo.timeAction)}
+		{:else if $semaforo.timeAction == 0}
 			<article style={'color:green'}>
 				{15 - time}
 			</article>
+		{:else if $semaforo.timeAction == 1}
+			<article style={'color:green'}>
+				{time}
+			</article>
 		{:else if $semaforo.timeAction == 2}
 			<article style={'color:yellow'}>
-				{time + 1}
+				{time}
 			</article>
 		{:else}
 			<article style={'color:red'}>
-				{time + 1}
+				{time}
 			</article>
 		{/if}
 	</Street>
@@ -181,7 +185,6 @@
 		position: absolute;
 		background-color: white;
 		border: 3px solid black;
-		text-shadow: 2px 2px black;
 		border-radius: 50%;
 		height: 50px;
 		width: 50px;

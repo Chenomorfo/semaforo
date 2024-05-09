@@ -13,7 +13,7 @@ const model = {
     timeChange: new Date()
 }
 export const trafficLightDuration = {
-    green: 15 * 1000,
+    green: 16 * 1000,
     greenTz: 3 * 1000,
     yellow: 3 * 1000,
     red: 2 * 1000,
