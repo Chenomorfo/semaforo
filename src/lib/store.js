@@ -1,7 +1,8 @@
 import { derived, writable } from "svelte/store";
 
 const model = {
-    isPaused: false,
+    isPaused: true,
+    hasStarted: false,
     isPreventive: false,
     elapsed: 0,
     estado: 5,
@@ -45,7 +46,7 @@ function createState() {
                 return { ...n, isWaiting: false }
             //en caso de rojo
             if (n.timeAction == 3)
-                return { ...n, isVertical: !n.isVertical, timeAction: 0, timeChange: new Date() }
+                return { ...n, isVertical: !n.isVertical, timeAction: 0, timeChange: new Date(), isWaiting: true }
             //en caso de verde
             if (![0, 1].includes(n.timeAction))
                 return { ...n, timeAction: n.timeAction + 1, timeChange: new Date() }
@@ -57,7 +58,7 @@ function createState() {
             elapsed: green ? 0 : n.elapsed,
             stopElapsed: red ? 0 : n.stopElapsed
         })),
-        pause: () => update(n => ({ ...n, isPaused: !n.isPaused })),
+        pause: () => update(n => ({ ...n, isPaused: !n.isPaused, hasStarted: true })),
         preventive: () => update(n => ({ ...n, isPreventive: !n.isPreventive })),
         reset: () => set(model)
     }
