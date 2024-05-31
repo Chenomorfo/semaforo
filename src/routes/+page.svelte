@@ -123,15 +123,15 @@
 			</article>
 		{:else if $semaforo.timeAction == 1}
 			<article style={'color:green'}>
-				{time}
+				{time + 1}
 			</article>
 		{:else if $semaforo.timeAction == 2}
-			<article style={'color:yellow'}>
-				{time}
+			<article style={'color:yellow; text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;'}>
+				{time + 1}
 			</article>
 		{:else}
 			<article style={'color:red'}>
-				{time}
+				
 			</article>
 		{/if}
 	</Street>

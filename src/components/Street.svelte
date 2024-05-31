@@ -9,5 +9,6 @@
 		width: 700px;
 		overflow: hidden;
 		position: relative;
+		top: -155px;
 	}
 </style>
